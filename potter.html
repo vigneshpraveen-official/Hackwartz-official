@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HACKWARTZ - Information technology Symposium</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<audio id="magicSound" src="bgm.mp3.mpeg"></audio>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const magicSound = document.getElementById("magicSound");
+
+  document.body.addEventListener("click", () => {
+    magicSound.currentTime = 0;
+    magicSound.play().catch(err => {
+      console.log("Audio blocked:", err);
+    });
+  }, { once: true }); // first click-la mattum play
+});
+</script>
+<style>
+  body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6); /* 0.7 = romba dark */
+  z-index: -1;
+}
+  
+/* ===========================================
+   RESET & BASE STYLES
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.countdown {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.countdown h3 {
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #FFD700;
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.timer {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.timer div {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  border-radius: 15px;
+  padding: 15px 20px;
+  min-width: 90px;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.timer span {
+  font-size: 2rem;
+  font-weight: bold;
+  display: block;
+  color: #FFD700;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+}
+
+.timer small {
+  font-size: 0.9rem;
+  font-weight: 600;
+  opacity: 0.95;
+  color: #FFE066;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+body {
+  font-family: 'Cinzel Decorative', cursive;
+  background: url('castle.jpg.jpeg') center/cover fixed;
+  color: #FFD700;
+  overflow-x: hidden;
+  min-height: 100vh;
+  /* Improve text readability */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   CUSTOM CURSOR (Magical Wand) - Desktop Only
+   ============================================ */
+@media (min-width: 768px) {
+  body {
+    cursor: none;
+  }
+  
+  .custom-cursor {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><defs><filter id="glow"><feGaussianBlur stdDeviation="1" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter><linearGradient id="wandGrad" x1="0%25" y1="0%25" x2="100%25" y2="100%25"><stop offset="0%25" style="stop-color:%23FFD700"/><stop offset="100%25" style="stop-color:%23FFA500"/></linearGradient></defs><ellipse cx="24" cy="8" rx="4" ry="4" fill="%23FFFACD" filter="url(%23glow)" opacity="0.95"/><circle cx="24" cy="8" r="1.5" fill="%23fff"/><path d="M22 10 L8 26 L10 28 L24 12 Z" fill="url(%23wandGrad)" stroke="%23D4AF37" stroke-width="0.5"/><path d="M8 26 L6 28 L8 28 Z" fill="%23D4AF37"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8));
+    transition: none;
+  }
+}
+
+/* ============================================
+   FLYING GOLDEN SNITCH
+   ============================================ */
+.golden-snitch {
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  pointer-events: none;
+  z-index: 5000;
+  background-image: url('assets/golden-snitch.gif');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+  animation: snitchFloat 20s ease-in-out infinite;
+}
+
+@keyframes snitchFloat {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(30vw, 20vh) rotate(90deg);
+  }
+  50% {
+    transform: translate(60vw, 10vh) rotate(180deg);
+  }
+  75% {
+    transform: translate(20vw, 50vh) rotate(270deg);
+  }
+}
+
+/* ============================================
+   QUIDDITCH FLYING ELEMENTS
+   ============================================ */
+.quidditch-element {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  z-index: 1000;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.8), rgba(255, 200, 0, 0.3));
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+  animation: quidditchFly 15s linear infinite;
+}
+
+@keyframes quidditchFly {
+  0% {
+    transform: translate(0, 100vh) scale(0.5);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(100vw, -10vh) scale(1);
+    opacity: 0;
+  }
+}
+
+
+/* ============================================
+   HEADER & NAVIGATION
+   ============================================ */
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+  background: rgba(10, 20, 50, 0.7);
+  backdrop-filter: blur(10px);
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 50px;
+}
+
+nav h4 {
+  font-family: 'Cinzel', serif;
+  letter-spacing: 2px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #FFD700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+nav ul {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+}
+
+nav li {
+  cursor: pointer;
+  position: relative;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #FFE066;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  transition: color 0.3s;
+}
+
+nav li:hover {
+  color: #FFD700;
+}
+
+nav li::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0;
+  height: 2px;
+  background: #D4AF37;
+  transition: 0.3s;
+}
+
+nav li:hover::after {
+  width: 100%;
+}
+
+/* ============================================
+   SECTIONS
+   ============================================ */
+section {
+  min-height: 100vh;
+  padding: 130px 60px;
+  display: none;
+  animation: fade 1s ease;
+  position: relative;
+}
+
+section h2 {
+  color: #FFD700;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.6), 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+section.active {
+  display: block;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+.hero {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.hero h2 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  color: #D4AF37;
+  text-shadow: 0 0 25px rgba(212, 175, 55, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.5);
+  animation: glowPulse 3s ease-in-out infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes glowPulse {
+  0% {
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    text-shadow:
+      0 0 20px rgba(212, 175, 55, 0.9),
+      0 0 40px rgba(255, 215, 0, 0.7),
+      0 0 60px rgba(212, 175, 55, 0.6),
+      2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  100% {
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.hero h3 {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  color: #FFD700;
+  font-weight: 600;
+  opacity: 0.98;
+  margin-top: 10px;
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.6), 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+/* ============================================
+   SORTING HAT SECTION
+   ============================================ */
+.sorting-section {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.sorting-hat-img {
+  width: 150px;
+  height: auto;
+  margin: 0 auto 30px;
+  display: block;
+  animation: hatFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 5px 15px rgba(139, 69, 19, 0.6));
+  -webkit-mask-image: radial-gradient(circle, black 60%, transparent 70%);
+  mask-image: radial-gradient(circle, black 60%, transparent 70%);
+}
+
+@keyframes hatFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(2deg);
+  }
+}
+
+.sorting-button {
+  padding: 15px 40px;
+  font-size: 1.2rem;
+  background: linear-gradient(45deg, #D4AF37, #FFD700);
+  border: none;
+  border-radius: 40px;
+  color: #1a1a1a;
+  cursor: pointer;
+  font-family: 'Cinzel Decorative', cursive;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+}
+
+.sorting-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(224, 184, 55, 0.6);
+}
+
+.sorting-button:disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.house-result {
+  margin-top: 30px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  min-height: 40px;
+  line-height: 1.8;
+  animation: fadeIn 0.5s ease;
+}
+
+.house-result-box {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 25px 40px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(212, 175, 55, 0.6);
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+.house-result-box .house-result {
+  margin-top: 0;
+}
+
+.famous-wizards-label {
+  font-size: 1rem;
+  display: block;
+  margin-top: 10px;
+}
+
+.famous-wizards-list {
+  font-size: 0.95rem;
+  font-weight: normal;
+  display: block;
+  margin-top: 5px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   EVENTS SECTION
+   ============================================ */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 28px;
+  margin-top: 60px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 28px 24px;
+  min-height: 200px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: left;
+  cursor: pointer;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+/* Event card title – larger, bold, with accent line */
+.card h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #FFD700;
+  margin: 0 0 16px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(212, 175, 55, 0.5);
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.4), 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* Event card description – smaller, softer, readable */
+.card p {
+  font-size: 0.925rem;
+  font-weight: 500;
+  color: rgba(255, 224, 102, 0.9);
+  line-height: 1.7;
+  margin: 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.schedule {
+  margin-top: 50px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 15px;
+  text-align: center;
+  color: #FFD700;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+th {
+  background: rgba(0, 0, 0, 0.6);
+  font-weight: bold;
+  color: #FFD700;
+  font-size: 1.05rem;
+}
+
+tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ============================================
+   REGISTRATION SECTION
+   ============================================ */
+#register {
+  background-image: url('assets/hogwarts-express.jpg'), linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  position: relative;
+}
+
+#register::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1;
+}
+
+.register-content h2 {
+  color: #FFD700;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+.register-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.owl-container {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.owl-image {
+  width: 200px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+  animation: owlFlap 2s ease-in-out infinite;
+  background: transparent;
+  filter: drop-shadow(0 5px 15px rgba(139, 69, 19, 0.5));
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  -webkit-mask-image: radial-gradient(circle, black 60%, transparent 70%);
+  mask-image: radial-gradient(circle, black 60%, transparent 70%);
+}
+
+@keyframes owlFlap {
+  0%, 100% {
+    transform: translateY(0px) rotate(-2deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(-1deg);
+  }
+  75% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+}
+
+.register-instructions {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 30px;
+  border-radius: 20px;
+  margin: 30px 0;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.register-instructions h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  font-weight: bold;
+  color: #FFD700;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+
+.register-instructions p {
+  line-height: 1.8;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #FFE066;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.register-button {
+  padding: 18px 50px;
+  font-size: 1.3rem;
+  background: linear-gradient(45deg, #ffd700, #ffed4e);
+  border: none;
+  border-radius: 50px;
+  color: #000;
+  cursor: pointer;
+  font-family: 'Cinzel Decorative', cursive;
+  font-weight: bold;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 5px 20px rgba(255, 215, 0, 0.5);
+  margin-top: 20px;
+}
+
+.register-button:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 10px 30px rgba(255, 215, 0, 0.7);
+}
+
+/* Home page Register CTA button */
+.register-cta-btn {
+  display: inline-block;
+  margin-top: 25px;
+  padding: 16px 45px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: linear-gradient(45deg, #D4AF37, #FFD700);
+  color: #1a1a1a;
+  text-decoration: none;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  font-family: 'Cinzel Decorative', cursive;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 5px 20px rgba(212, 175, 55, 0.5);
+}
+
+.register-cta-btn:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 10px 30px rgba(255, 215, 0, 0.7);
+}
+
+/* ============================================
+   CONTACT & COORDINATORS SECTION
+   ============================================ */
+.coordinators-section {
+  padding: 80px 20px;
+}
+
+.coordinators-section h1 {
+  color: #FFD700;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* Coordinators: exactly 6 cards, clean grid layout */
+.coordinators-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  margin-top: 40px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 900px) {
+  .coordinators-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .coordinators-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.coordinator-card {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.coordinator-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(127, 220, 255, 0.3);
+}
+
+/* Image placeholder when no image provided */
+.coordinator-img {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 15px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.4), rgba(255, 215, 0, 0.2));
+  border: 2px solid rgba(212, 175, 55, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: rgba(255, 215, 0, 0.6);
+}
+
+.coordinator-card img {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 15px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(212, 175, 55, 0.6);
+}
+
+.coordinator-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  color: #FFD700;
+  font-weight: bold;
+}
+
+.coordinator-card .role {
+  font-size: 0.95rem;
+  color: #D4AF37;
+  margin-bottom: 10px;
+  font-style: italic;
+  opacity: 0.95;
+}
+
+.coordinator-card .phone {
+  font-size: 1rem;
+  color: #D4AF37;
+  font-weight: 500;
+}
+
+.whatsapp-button {
+  display: inline-block;
+  padding: 15px 40px;
+  background: #0df060;
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 30px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+}
+
+.whatsapp-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6);
+}
+
+/* ============================================
+   CONTACT SECTION (Original)
+   ============================================ */
+.contact-box {
+  max-width: 500px;
+  margin: auto;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 40px;
+  border-radius: 25px;
+}
+
+.contact-box h2 {
+  color: #FFD700;
+  font-weight: bold;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+
+.contact-box p {
+  color: #FFE066;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.contact-box a {
+  color: #FFD700;
+  font-size: 1.15rem;
+  font-weight: bold;
+  text-decoration: none;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Instagram button in Contact section */
+.instagram-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 35px;
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s;
+  box-shadow: 0 5px 15px rgba(188, 24, 136, 0.4);
+}
+
+.instagram-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(188, 24, 136, 0.6);
+  opacity: 0.95;
+}
+
+.instagram-btn i {
+  font-size: 1.4rem;
+}
+
+.contact-social-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ============================================
+   POPUP
+   ============================================ */
+.popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.popup-box {
+  background: #0c1f3d;
+  padding: 40px;
+  border-radius: 25px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(212, 175, 55, 0.6);
+  max-width: 500px;
+  width: 90%;
+}
+
+.popup-box h3 {
+  color: #FFD700;
+  font-weight: bold;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+
+.popup-box button {
+  margin-top: 20px;
+  padding: 14px 40px;
+  border: none;
+  border-radius: 40px;
+  background: linear-gradient(45deg, #D4AF37, #FFD700);
+  font-size: 16px;
+  cursor: pointer;
+  color: #1a1a1a;
+  font-family: 'Cinzel Decorative', cursive;
+  transition: transform 0.3s;
+}
+
+.popup-box button:hover {
+  transform: scale(1.05);
+}
+
+/* Event rules popup content */
+.popup-rules {
+  max-width: 550px;
+}
+
+.event-rules-content {
+  text-align: left;
+  margin: 20px 0;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 15px;
+  max-height: 400px;
+  overflow-y: auto;
+  line-height: 1.8;
+  font-size: 1rem;
+  color: #FFD700;
+}
+
+.event-rules-content ul {
+  margin: 10px 0;
+  padding-left: 25px;
+}
+
+.event-rules-content li {
+  margin: 8px 0;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+footer {
+  text-align: center;
+  padding: 30px;
+  opacity: 0.9;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fcb512;
+}
+
+/* ============================================
+   MAGIC EFFECTS
+   ============================================ */
+.magic-bg span {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  background: #ffeb11;
+  box-shadow: 0 0 10px #f4e02c;
+  border-radius: 50%;
+  animation: floatSpark 10s linear infinite;
+  opacity: 0.8;
+}
+
+@keyframes floatSpark {
+  from {
+    transform: translateY(100vh) scale(0.5);
+  }
+  to {
+    transform: translateY(-10vh) scale(1);
+  }
+}
+
+.orb {
+  position: fixed;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #f5e317, #eed511);
+  box-shadow: 0 0 20px #7fdcff;
+  animation: orbFly linear infinite;
+  pointer-events: none;
+}
+
+@keyframes orbFly {
+  from {
+    transform: translateY(110vh);
+  }
+  to {
+    transform: translateY(-20vh);
+  }
+}
+
+/* ============================================
+   MOBILE RESPONSIVENESS
+   ============================================ */
+@media (max-width: 768px) {
+  nav {
+    padding: 15px 20px;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  nav ul {
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  section {
+    padding: 100px 20px 60px;
+  }
+  
+  .golden-snitch {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .sorting-hat-img {
+    width: 100px;
+  }
+  
+  .owl-image {
+    width: 150px;
+  }
+  
+  .coordinators-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .card {
+    min-height: 180px;
+    padding: 24px 20px;
+  }
+  
+  .card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+  }
+  
+  .card p {
+    font-size: 0.875rem;
+    line-height: 1.65;
+  }
+  
+  table {
+    font-size: 0.85rem;
+  }
+  
+  th, td {
+    padding: 10px 5px;
+  }
+.owl-img {
+  width: 180px;
+  background: transparent;
+  mix-blend-mode: multiply;
+}
+
+}
+</style>
+</head>
+<body>
+  <!-- Magic Background Effects -->
+  <div class="magic-bg"></div>
+  
+  <!-- Flying Golden Snitch -->
+  <div class="golden-snitch" id="snitch"></div>
+  
+  <!-- Custom Cursor (Desktop Only) -->
+  <div class="custom-cursor" id="cursor"></div>
+  
+  <!-- Header -->
+  <header>
+    <nav>
+      <h4>INFORMATION TECHNOLOGY</h4>
+      <ul>
+        <li onclick="show('home')"><b>Home</b></li>
+        <li onclick="show('sorting')"><b>Sorting</b></li>
+        <li onclick="show('events')"><b>Events</b></li>
+        <li onclick="show('register')"><b>Register</b></li>
+        <li onclick="show('coordinators')"><b>Contact</b></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <!-- Home Section -->
+  <section id="home" class="active">
+    <div class="hero">
+      <h2>HACKWARTZ 2k26</h2>
+      <h3>Explore the Magic & Mysteries of Technology</h3>
+      <!-- Register button: navigates to existing Registration section -->
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeZKoS3NOQDJ7Xtir5rztS8N1y6ODrbvlI0-hpCIGLKlpHqRg/viewform" class="register-cta-btn" onclick="show('register'); return false;" aria-label="Go to Registration page">Register</a>
+    </div>
+    <div class="countdown">
+  <h3>🪄 Symposium Begins In</h3>
+  <div class="timer">
+    <div><span id="days">00</span><small>Days</small></div>
+    <div><span id="hours">00</span><small>Hours</small></div>
+    <div><span id="minutes">00</span><small>Minutes</small></div>
+    <div><span id="seconds">00</span><small>Seconds</small></div>
+  </div>
+</div>
+  </section>
+  
+  <!-- Sorting Hat Section -->
+  <section id="sorting">
+    <div class="sorting-section">
+      <img src="assets/hat.jpeg" alt="Sorting Hat" class="sorting-hat-img">
+      <h2><b><b>Find Your House</b></b></h2><br>
+      <button class="sorting-button" onclick="sortHouse()"><b>Put On The Sorting Hat</b></button>
+      <div class="house-result-box" id="houseResultBox" style="display: none;">
+        <div class="house-result" id="houseResult"></div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Events Section -->
+  <section id="events">
+    <h2>Technical Events</h2>
+    <div class="grid">
+      <div class="card" onclick="openEventDetails('parchment')">
+        <h3>PARCHEMENT PRESENTATION</h3>
+        <p>Step into the halls of Hogwarts and present your ideas with knowledge and creativity. The Paper Presentation event provides a platform for students to showcase innovative and research-oriented work before a panel of expert judges.</p>
+      </div>
+      <div class="card" onclick="openEventDetails('invertio')">
+        <h3>INVERTIO</h3>
+        <p>Invertio is a coding and web-designing challenge where participants analyze the given output and recreate the required logic or webpage accurately within the allotted time.</p>
+      </div>
+      <div class="card" onclick="openEventDetails('horcrux')">
+        <h3>HORCRUX QUIZ</h3>
+        <p>The Horcrux Quiz is a fast-paced quiz event designed to test participants' knowledge, logic, and presence of mind. Teams will compete across multiple rounds, with only the best advancing further.</p>
+      </div>
+      <div class="card" onclick="openEventDetails('webcrest')">
+        <h3>WEB CRUST</h3>
+        <p>Web Crust is a creative web designing event that tests participants' skills in layout design, visual aesthetics, and basic functionality within a limited time.</p>
+      </div>
+    </div>
+    
+    <h2 style="margin-top: 60px">Non-Technical Events</h2>
+    <div class="grid">
+      <div class="card" onclick="openEventDetails('revelio')">
+        <h3>REVILO</h3>
+        <p>Revelio is an interactive guessing game where participants test their deduction and communication skills. One participant will wear a headband containing an image, while the opposing participant provides single-word or short responses to help identify the image without directly revealing the answer.</p>
+      </div>
+      <div class="card" onclick="openEventDetails('expecto')">
+        <h3>EXPECTO BEATS</h3>
+        <p>Expecto Beats is an engaging music-based event where participants test their listening skills by guessing dialogues and identifying missing song lyrics.</p>
+      </div>
+      <div class="card" onclick="openEventDetails('ipl')">
+        <h3>IPL AUCTION</h3>
+        <p>IPL Auction is a strategic team-based event where participants act as franchise owners and build their teams through a simulated auction process.</p>
+      </div>
+    </div>
+    
+    <div class="schedule">
+      <h2>Event Schedule</h2>
+      <table>
+        <tr>
+          <th>Event</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Venue</th>
+        </tr>
+        <tr>
+          <td>Parchment Presentation</td>
+          <td>12-02-26</td>
+          <td>9 AM</td>
+          <td>Enchanted Hall</td>
+        </tr>
+        <tr>
+          <td>Invertio</td>
+          <td>12-02-26</td>
+          <td> 10 PM</td>
+          <td>Crystal Tower</td>
+        </tr>
+        <tr>
+          <td>Horcrux Quiz</td>
+          <td>12-02-26</td>
+          <td>11 AM</td>
+          <td>Mystic Lab</td>
+        </tr>
+        <tr>
+          <td>Web Crust</td>
+          <td>12-02-26</td>
+          <td>10:30 PM</td>
+          <td>Arcane Workshop</td>
+        </tr>
+        <tr>
+          <td>Revelio</td>
+          <td>12-02-26</td>
+          <td>11 AM</td>
+          <td>Mystic Chamber</td>
+        </tr>
+        <tr>
+          <td>Expecto Beats</td>
+          <td>12-02-26</td>
+          <td>10:30 AM</td>
+          <td>Grand Hall</td>
+        </tr>
+        <tr>
+          <td>IPL Auction</td>
+          <td>12-02-26</td>
+          <td>9 AM</td>
+          <td>Askaban</td>
+        </tr>
+      </table>
+    </div>
+  </section>
+  
+  <!-- Registration Section -->
+  <section id="register">
+    <div class="register-content">
+      <div class="owl-container">
+        <img src="assets/owl.png" alt="Owl with Letter" class="owl-image">
+      </div>
+      <h2>Register Now</h2>
+      <div class="register-instructions">
+        <h3>Your Hogwarts Letter Awaits!</h3>
+        <p>Join us for an enchanting symposium experience</p>
+        <p>Click below to complete your registration</p>
+      </div>
+      <button class="register-button" onclick="goForm()"><b>Go to Registration Form</b></button>
+    </div>
+  </section>
+  
+  <!-- Contact & Coordinators Section -->
+  <section id="coordinators" class="coordinators-section">
+    <h1><b>📞 Contact & Coordinators</b></h1>
+    <div class="contact-social-buttons">
+      <a href="https://chat.whatsapp.com/LWh7Kx36bxn8ErJFEQK85J" target="_blank" class="whatsapp-button">Join WhatsApp Group</a>
+      <a href="https://www.instagram.com/hackwartz2k26?igsh=dmM1bWk2b2F3b2Nn" target="_blank" rel="noopener noreferrer" class="instagram-btn" aria-label="Follow us on Instagram (opens in new tab)">
+        <i class="fab fa-instagram"></i> Follow on Instagram
+      </a>
+    </div>
+    <div class="coordinators-grid">
+      <div class="coordinator-card">
+        <div class="coordinator-img" aria-hidden="true">👤</div>
+        <h3>Mrs Saranya Devi</h3>
+        <p class="role">Event Coordinator</p>
+        <p class="phone">+91 8870626924</p>
+      </div>
+      <div class="coordinator-card">
+        <div class="coordinator-img" aria-hidden="true">👤</div>
+        <h3>Ms Karthiga Priya</h3>
+        <p class="role">Student Coordinator</p>
+        <p class="phone">+91 7094854731</p>
+      </div>
+      <div class="coordinator-card">
+        <div class="coordinator-img" aria-hidden="true">👤</div>
+        <h3>Ms Breny Cindrella</h3>
+        <p class="role">Student Coordinator</p>
+        <p class="phone">+91 9443280130</p>
+      </div>
+      <div class="coordinator-card">
+        <div class="coordinator-img" aria-hidden="true">👤</div>
+        <h3>Mr Antony Suresh</h3>
+        <p class="role">Event Coordinator</p>
+        <p class="phone">+91 8610857293</p>
+      </div>
+      <div class="coordinator-card">
+        <div class="coordinator-img" aria-hidden="true">👤</div>
+        <h3>Mr Prakash</h3>
+        <p class="role">Student Coordinator</p>
+        <p class="phone">+91 8531073839</p>
+      </div>
+      <div class="coordinator-card">
+        <div class="coordinator-img" aria-hidden="true">👤</div>
+        <h3>Ms Vaishnavi</h3>
+        <p class="role">Student Coordinator</p>
+        <p class="phone">+91 7868833222</p>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Contact Section (Original) -->
+  <section id="contact">
+    <div class="contact-box">
+      <h2><b>Contact Us</b></h2>
+      <p style="margin: 20px 0">For queries & support</p>
+      <a href="https://chat.whatsapp.com/LWh7Kx36bxn8ErJFEQK85J" target="_blank"><b>📱 WhatsApp Us</b></a>
+    </div>
+  </section>
+  
+  <!-- Event Details Popup: Rules & Regulations only (no Register button) -->
+  <div class="popup" id="popup">
+    <div class="popup-box popup-rules">
+      <h3 id="popupEventTitle">Event Rules & Regulations</h3>
+      <div id="popupEventRules" class="event-rules-content"></div>
+      <button onclick="closePop()">Close</button>
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <footer><b>© 2026 HACKWARTZ - Information Technology Symposium</b></footer>
+  
+  <script>
+    // ============================================
+    // CONSTANTS
+    // ============================================
+    const FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSeZKoS3NOQDJ7Xtir5rztS8N1y6ODrbvlI0-hpCIGLKlpHqRg/viewform';
+    const HOUSES = ['Gryffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin'];
+    
+    // Event Rules & Regulations (displayed when user clicks an event)
+    const EVENT_RULES = {
+      parchment: {
+        title: 'Parchment Presentation – Rules & Regulations',
+        rules: [
+          'Each team must consist of minimum 2 and maximum 4 members',
+          'Only one paper per team is permitted',
+          'Topics must be original, relevant, and innovative',
+          'Any form of plagiarism will lead to disqualification',
+          'Paper must be prepared in IEEE format',
+          'Presentation must be in PPT format only',
+          'Time allotted: 8–10 minutes, followed by a brief Q&A',
+          'Participants must carry a valid college ID (Hogwarts ID 😉)',
+          'The decision of the judging panel shall be final.'
+        ]
+      },
+      invertio: {
+        title: 'Invertio – Rules & Regulations',
+        rules: [
+          'Participants may compete individually or in teams as specified by the organizers',
+          'A sample output will be provided, and participants must design/code accordingly',
+          'Time limits must be strictly followed',
+          'Use of external assistance or pre-written code is not allowed',
+          'Submissions will be evaluated based on correctness and design accuracy',
+          'The decision of the judges shall be final'
+        ]
+      },
+      horcrux: {
+        title: 'Horcrux Quiz – Rules & Regulations',
+        rules: [
+          'Each team must consist of 3 to 4 members',
+          'Round I will be the Qualifier Round for all teams',
+          'Only the top-scoring teams will advance to the next rounds',
+          'Use of mobile phones or any external assistance is strictly prohibited',
+          'In case of a tie, a tie-breaker round/question will be conducted',
+          'The Quiz Master\'s decision shall be final.'
+        ]
+      },
+      webcrest: {
+        title: 'Web Crust – Rules & Regulations',
+        rules: [
+          'Participants may compete individually or in teams as specified',
+          'A theme or problem statement will be provided on the spot',
+          'Designs must be completed within the given time limit',
+          'Use of pre-built templates or external assistance is not allowed',
+          'Submissions will be judged based on creativity, structure, and responsiveness'
+        ]
+      },
+      revelio: {
+        title: 'Revelio – Rules & Regulations',
+        rules: [
+          'Participants will play in pairs',
+          'One participant will wear a headband with an image placed on their head',
+          'The guessing participant may ask yes/no or limited questions to identify the image',
+          'The opposing participant must respond with single-word or short answers only',
+          'Direct hints or revealing the answer is not allowed',
+          'A time limit will be set for each round',
+          'Use of mobile phones or external assistance is strictly prohibited',
+          'The participant who guesses correctly within the time limit advances',
+          'In case of a tie, a tie-breaker round will be conducted',
+          'The event coordinator\'s decision shall be final.'
+        ]
+      },
+      expecto: {
+        title: 'Expecto Beats – Rules & Regulations',
+        rules: [
+          'Participants may compete individually or in teams',
+          'Audio or dialogue clips will be played during the event',
+          'Participants must identify the dialogue or complete the missing lyrics',
+          'Time limits apply for each question or round',
+          'No external assistance is permitted',
+          'The event coordinator\'s decision shall be final'
+        ]
+      },
+      ipl: {
+        title: 'IPL Auction – Rules & Regulations',
+        rules: [
+          'Participants must take part in teams',
+          'Each team will be given a fixed virtual budget',
+          'Players will be auctioned according to the rules set by the organizers',
+          'Teams must plan and bid within the given constraints',
+          'Final team evaluation will be based on predefined criteria',
+          'The organizers\' decision shall be final.'
+        ]
+      }
+    };
+    const HOUSE_COLORS = {
+      'Gryffindor': '#FFF75E',
+      'Hufflepuff': '#7FDFFF',
+      'Ravenclaw': '#3CFF9A',
+      'Slytherin': '#FF6B6B'
+    };
+    
+    // Famous wizards per house (static list for display after sorting)
+    const FAMOUS_WIZARDS = {
+      'Gryffindor': ['Harry Potter', 'Hermione Granger', 'Ron Weasley', 'Albus Dumbledore', 'Minerva McGonagall', 'Sirius Black', 'Neville Longbottom'],
+      'Hufflepuff': ['Newt Scamander', 'Cedric Diggory', 'Pomona Sprout', 'Nymphadora Tonks', 'Hannah Abbott', 'Susan Bones'],
+      'Ravenclaw': ['Luna Lovegood', 'Cho Chang', 'Gilderoy Lockhart', 'Filius Flitwick', 'Rowena Ravenclaw', 'Padma Patil'],
+      'Slytherin': ['Severus Snape', 'Draco Malfoy', 'Tom Riddle', 'Bellatrix Lestrange', 'Horace Slughorn', 'Regulus Black']
+    };
+    
+    const SORTING_STORAGE_KEY = 'hackwartz_sorted_house';
+    
+    // ============================================
+    // NAVIGATION FUNCTIONS
+    // ============================================
+    function show(id) {
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      const section = document.getElementById(id);
+      if (section) {
+        section.classList.add('active');
+      }
+    }
+    
+    // ============================================
+    // POPUP FUNCTIONS (Events: Rules & Regulations only, no Register)
+    // ============================================
+    function openEventDetails(eventKey) {
+      const data = EVENT_RULES[eventKey];
+      if (!data) return;
+      document.getElementById('popupEventTitle').textContent = data.title;
+      const rulesEl = document.getElementById('popupEventRules');
+      rulesEl.innerHTML = '<ul>' + data.rules.map(r => '<li>' + r + '</li>').join('') + '</ul>';
+      document.getElementById('popup').style.display = 'flex';
+    }
+    
+    function closePop() {
+      document.getElementById('popup').style.display = 'none';
+    }
+    
+    function goForm() {
+      window.open(FORM, '_blank');
+    }
+    
+    // ============================================
+    // SORTING HAT - One-time only, localStorage, famous wizards
+    // ============================================
+    function sortHouse() {
+      // Check if already sorted (from localStorage)
+      const stored = localStorage.getItem(SORTING_STORAGE_KEY);
+      if (stored) {
+        showStoredHouseResult(stored);
+        return;
+      }
+      const house = HOUSES[Math.floor(Math.random() * HOUSES.length)];
+      localStorage.setItem(SORTING_STORAGE_KEY, house);
+      displayHouseResult(house);
+      disableSortingButton();
+    }
+    
+    function displayHouseResult(house) {
+      const resultDiv = document.getElementById('houseResult');
+      const boxDiv = document.getElementById('houseResultBox');
+      const wizards = FAMOUS_WIZARDS[house] || [];
+      const wizardList = wizards.map(w => '• ' + w).join('<br>');
+      resultDiv.innerHTML = `<strong>You belong to... ${house}!</strong><br><br><span class="famous-wizards-label">Famous wizards from ${house}:</span><br><span class="famous-wizards-list">${wizardList}</span>`;
+      resultDiv.style.color = HOUSE_COLORS[house];
+      resultDiv.style.textShadow = `0 0 20px ${HOUSE_COLORS[house]}`;
+      if (boxDiv) boxDiv.style.display = 'inline-block';
+    }
+    
+    function showStoredHouseResult(house) {
+      displayHouseResult(house);
+      disableSortingButton();
+    }
+    
+    function disableSortingButton() {
+      const btn = document.querySelector('.sorting-button');
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Already Sorted';
+        btn.style.opacity = '0.6';
+        btn.style.cursor = 'not-allowed';
+      }
+    }
+    
+    // On load: if already sorted, show result and disable button
+    function initSortingSection() {
+      const stored = localStorage.getItem(SORTING_STORAGE_KEY);
+      if (stored) {
+        showStoredHouseResult(stored);
+      }
+    }
+    
+    // ============================================
+    // FLYING GOLDEN SNITCH - Random Movement
+    // ============================================
+    function animateSnitch() {
+      const snitch = document.getElementById('snitch');
+      let x = Math.random() * (window.innerWidth - 60);
+      let y = Math.random() * (window.innerHeight - 60);
+      let vx = (Math.random() - 0.5) * 2;
+      let vy = (Math.random() - 0.5) * 2;
+      
+      function move() {
+        x += vx;
+        y += vy;
+        
+        // Bounce off edges
+        if (x <= 0 || x >= window.innerWidth - 60) {
+          vx = -vx;
+          x = Math.max(0, Math.min(x, window.innerWidth - 60));
+        }
+        if (y <= 0 || y >= window.innerHeight - 60) {
+          vy = -vy;
+          y = Math.max(0, Math.min(y, window.innerHeight - 60));
+        }
+        
+        snitch.style.transform = `translate(${x}px, ${y}px)`;
+        requestAnimationFrame(move);
+      }
+      
+      snitch.style.left = x + 'px';
+      snitch.style.top = y + 'px';
+      move();
+    }
+    
+    // ============================================
+    // QUIDDITCH FLYING ELEMENTS
+    // ============================================
+    function createQuidditchElements() {
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          const element = document.createElement('div');
+          element.className = 'quidditch-element';
+          element.style.left = Math.random() * 100 + 'vw';
+          element.style.animationDelay = Math.random() * 5 + 's';
+          element.style.animationDuration = (10 + Math.random() * 10) + 's';
+          document.body.appendChild(element);
+          
+          setTimeout(() => {
+            element.remove();
+          }, 25000);
+        }, i * 3000);
+      }
+      
+      // Continuously create new elements
+      setInterval(() => {
+        const element = document.createElement('div');
+        element.className = 'quidditch-element';
+        element.style.left = Math.random() * 100 + 'vw';
+        element.style.animationDelay = '0s';
+        element.style.animationDuration = (10 + Math.random() * 10) + 's';
+        document.body.appendChild(element);
+        
+        setTimeout(() => {
+          element.remove();
+        }, 25000);
+      }, 8000);
+    }
+    
+    // ============================================
+    // CUSTOM CURSOR (Desktop Only)
+    // ============================================
+    function initCustomCursor() {
+      if (window.innerWidth < 768) return;
+      
+      const cursor = document.getElementById('cursor');
+      let mouseX = 0;
+      let mouseY = 0;
+      let cursorX = 0;
+      let cursorY = 0;
+      
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
+      
+      function animateCursor() {
+        cursorX += (mouseX - cursorX) * 0.1;
+        cursorY += (mouseY - cursorY) * 0.1;
+        cursor.style.left = cursorX + 'px';
+        cursor.style.top = cursorY + 'px';
+        requestAnimationFrame(animateCursor);
+      }
+      
+      animateCursor();
+    }
+    
+    // ============================================
+    // MAGIC BACKGROUND EFFECTS
+    // ============================================
+    function initMagicEffects() {
+      const bg = document.querySelector('.magic-bg');
+      
+      // Create floating sparks
+      for (let i = 0; i < 40; i++) {
+        const s = document.createElement('span');
+        s.style.left = Math.random() * 100 + 'vw';
+        s.style.animationDuration = (5 + Math.random() * 10) + 's';
+        s.style.opacity = Math.random();
+        bg.appendChild(s);
+      }
+      
+      // Create orbs
+      for (let i = 0; i < 6; i++) {
+        const orb = document.createElement('div');
+        orb.className = 'orb';
+        orb.style.left = Math.random() * 100 + 'vw';
+        orb.style.animationDuration = (10 + Math.random() * 10) + 's';
+        document.body.appendChild(orb);
+      }
+    }
+    
+    // ============================================
+    // CLICK SPARKLE EFFECTS
+    // ============================================
+    
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+    window.addEventListener('DOMContentLoaded', () => {
+      initCustomCursor();
+      initMagicEffects();
+      createQuidditchElements();
+      animateSnitch();
+      initSortingSection();
+    });
+    
+    // Reinitialize cursor on resize
+    window.addEventListener('resize', () => {
+      const cursor = document.getElementById('cursor');
+      if (cursor) {
+        if (window.innerWidth < 768) {
+          cursor.style.display = 'none';
+        } else {
+          cursor.style.display = 'block';
+          initCustomCursor();
+        }
+      }
+    });
+  </script>
+  <script>
+const eventDate = new Date("February 12, 2026 09:00:00").getTime();
+
+setInterval(() => {
+  const now = new Date().getTime();
+  const diff = eventDate - now;
+
+  if (diff < 0) return;
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+
+  document.getElementById("days").innerText = days;
+  document.getElementById("hours").innerText = hours;
+  document.getElementById("minutes").innerText = minutes;
+  document.getElementById("seconds").innerText = seconds;
+}, 1000);
+</script>
+</body>
+</html>
